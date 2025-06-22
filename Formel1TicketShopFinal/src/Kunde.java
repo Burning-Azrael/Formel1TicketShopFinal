@@ -1,26 +1,27 @@
 public class Kunde {
-    private int kid;
+
     private String name;
     private String email;
-    
-    public int getKid() {
-        return kid;
+
+    public Kunde(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
-    public void setKid(int kid) {
-        this.kid = kid;
-    }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
-    
 }

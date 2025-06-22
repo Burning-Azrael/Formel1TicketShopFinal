@@ -15,9 +15,9 @@ public class F1TicketGUI extends JFrame {
     JTextField txt_name, txt_email, txt_phone;
     JComboBox<String> cbo_race;
     JComboBox<Integer> cbo_quantity;
-    JRadioButton opt_paypal, opt_cash, opt_stehplatz,opt_tribuene,opt_vip;
+    JRadioButton opt_paypal, opt_cash, opt_stehplatz, opt_tribuene, opt_vip;
     ButtonGroup paymentGroup;
-    //JCheckBox chk_stehplatz, chk_tribuene, chk_vip;
+    // JCheckBox chk_stehplatz, chk_tribuene, chk_vip;
     JButton btn_reset, btn_save, btn_exit, btn_speichern;
 
     Map<String, Map<String, BigDecimal>> preise;
@@ -25,7 +25,7 @@ public class F1TicketGUI extends JFrame {
     public F1TicketGUI() {
         this.setTitle("Formel 1 Ticketformular");
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        
+
         initPrices();
         initComponents();
 
@@ -112,18 +112,18 @@ public class F1TicketGUI extends JFrame {
         // Rennen
         lbl_race = new JLabel("Rennstrecke:");
         lbl_race.setFont(labelFont);
-        c.gridx = 0; 
+        c.gridx = 0;
         c.gridy = 4;
         this.add(lbl_race, c);
 
-        cbo_race = new JComboBox<>(new String[]{"Monaco", "Silverstone", "Monza", "Österreich", "Imola"});
+        cbo_race = new JComboBox<>(new String[] { "Monaco", "Silverstone", "Monza", "Österreich", "Imola" });
         c.gridx = 1;
         this.add(cbo_race, c);
 
         // Sitzplätze
         lbl_seat = new JLabel("Sitzplatzoption:");
         lbl_seat.setFont(labelFont);
-        c.gridx = 0; 
+        c.gridx = 0;
         c.gridy = 5;
         this.add(lbl_seat, c);
 
@@ -131,40 +131,35 @@ public class F1TicketGUI extends JFrame {
         opt_stehplatz.setSelected(true);
         opt_tribuene = new JRadioButton("Tribüne");
         opt_vip = new JRadioButton("VIP");
- 
-        
-        
 
         ButtonGroup sitzgruppe = new ButtonGroup();
         sitzgruppe.add(opt_stehplatz);
         sitzgruppe.add(opt_tribuene);
         sitzgruppe.add(opt_vip);
 
-        
- 
         JPanel sitzPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         sitzPanel.add(opt_stehplatz);
         sitzPanel.add(opt_tribuene);
         sitzPanel.add(opt_vip);
- 
+
         c.gridx = 1;
         this.add(sitzPanel, c);
 
         // Menge
         lbl_quantity = new JLabel("Anzahl Tickets:");
         lbl_quantity.setFont(labelFont);
-        c.gridx = 0; 
+        c.gridx = 0;
         c.gridy = 6;
         this.add(lbl_quantity, c);
 
-        cbo_quantity = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5});
+        cbo_quantity = new JComboBox<>(new Integer[] { 1, 2, 3, 4, 5 });
         c.gridx = 1;
         this.add(cbo_quantity, c);
 
         // Zahlung
         lbl_payment = new JLabel("Zahlungsart:");
         lbl_payment.setFont(labelFont);
-        c.gridx = 0; 
+        c.gridx = 0;
         c.gridy = 7;
         this.add(lbl_payment, c);
 
@@ -206,18 +201,15 @@ public class F1TicketGUI extends JFrame {
         c.gridx = 1;
         c.gridy = 9;
         c.insets = new Insets(10, 10, 10, 10);
-        this.add(btn_speichern,c);
-        
+        this.add(btn_speichern, c);
+
         // Events
         btn_reset.addActionListener(myActionListener);
-        btn_exit.addActionListener(e -> dispose());
+        btn_exit.addActionListener(myActionListener);
         btn_save.addActionListener(this::saveToFile);
         btn_speichern.addActionListener(myActionListener);
-        
-        
-    }
 
-    
+    }
 
     private void saveToFile(ActionEvent e) {
         String name = txt_name.getText();
@@ -225,9 +217,8 @@ public class F1TicketGUI extends JFrame {
         String telefon = txt_phone.getText();
         String strecke = (String) cbo_race.getSelectedItem();
         int anzahl = (Integer) cbo_quantity.getSelectedItem();
-        String sitzplatz = opt_vip.isSelected() ? "VIP" :
-                           opt_tribuene.isSelected() ? "Tribüne" :
-                           opt_stehplatz.isSelected() ? "Stehplatz" : "Keine Auswahl";
+        String sitzplatz = opt_vip.isSelected() ? "VIP"
+                : opt_tribuene.isSelected() ? "Tribüne" : opt_stehplatz.isSelected() ? "Stehplatz" : "Keine Auswahl";
 
         if (sitzplatz.equals("Keine Auswahl")) {
             JOptionPane.showMessageDialog(this, "Bitte wählen Sie eine Sitzplatzoption.");
@@ -238,15 +229,17 @@ public class F1TicketGUI extends JFrame {
         BigDecimal gesamtpreis = preisProTicket.multiply(BigDecimal.valueOf(anzahl));
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("F1_Bestellungen.txt", true))) {
-            writer.write(name + ";" + email + ";" + telefon + ";" + strecke + ";" + sitzplatz + ";" + anzahl + ";" + gesamtpreis + "€");
+            writer.write(name + ";" + email + ";" + telefon + ";" + strecke + ";" + sitzplatz + ";" + anzahl + ";"
+                    + gesamtpreis + "€");
             writer.newLine();
             JOptionPane.showMessageDialog(this, "Bestellung gespeichert.\nGesamtpreis: " + gesamtpreis + "€");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Fehler beim Speichern!");
         }
     }
+
     private class MyActionListener implements ActionListener {
-        public void actionPerformed(ActionEvent e){
+        public void actionPerformed(ActionEvent e) {
             if (e.getSource() == btn_speichern) {
                 String name = txt_name.getText();
                 String email = txt_email.getText();
@@ -257,9 +250,9 @@ public class F1TicketGUI extends JFrame {
 
                 if (opt_stehplatz.isSelected()) {
                     opt = opt_stehplatz.getText();
-                }else if (opt_tribuene.isSelected()){
+                } else if (opt_tribuene.isSelected()) {
                     opt = opt_tribuene.getText();
-                }else if (opt_vip.isSelected()){
+                } else if (opt_vip.isSelected()) {
                     opt = opt_vip.getText();
                 }
 
@@ -267,18 +260,25 @@ public class F1TicketGUI extends JFrame {
 
                 if (opt_paypal.isSelected()) {
                     zArt = opt_paypal.getText();
-                }else if(opt_cash.isSelected()){
+                } else if (opt_cash.isSelected()) {
                     zArt = opt_cash.getText();
                 }
 
-                Ticket ticket = new Ticket(name, email, tel, race, opt, anzahl, zArt);
+                BigDecimal preisProTicket = preise.get(race).get(opt);
+                BigDecimal gesamtpreis = preisProTicket.multiply(BigDecimal.valueOf(anzahl));
 
-                BestellungDAO bestellung = new BestellungDAO();
+                Bestellung bestellung = new Bestellung(name, gesamtpreis, race, email);
+                Kunde kunde = new Kunde(name, email);
+                Veranstaltung v = new Veranstaltung(race,anzahl,opt);
 
-                //es fehlen die IDs von kunden und veranstaltung
-                //bestellung.speichernBestellung(ticket);
-            
-            }else if (e.getSource() == btn_reset) {
+                BestellungDAO dao = new BestellungDAO();
+
+                // es fehlen die IDs von kunden und veranstaltung
+                dao.speichernBestellung(bestellung);
+                dao.speichernKunde(kunde);
+                dao.speichernVeranstaltung(v);
+
+            } else if (e.getSource() == btn_reset) {
                 txt_name.setText("");
                 txt_email.setText("");
                 txt_phone.setText("");
@@ -293,8 +293,12 @@ public class F1TicketGUI extends JFrame {
 
                 opt_cash.setSelected(true);
                 opt_paypal.setSelected(false);
+
+            }else if (e.getSource()== btn_exit){
+                dispose();
+                new StartGUI();
             }
         }
- 
+
     }
 }
