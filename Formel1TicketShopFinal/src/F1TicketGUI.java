@@ -287,6 +287,8 @@ public class F1TicketGUI extends JFrame {
                 dao.speichernBestellung(bestellung);
                 dao.speichernKunde(kunde);
                 dao.speichernVeranstaltung(v);
+
+                JOptionPane.showMessageDialog(null, "Bestellung erfolgreich gespeichert!");
             }
             } else if (e.getSource() == btn_reset) {
                 txt_name.setText("");

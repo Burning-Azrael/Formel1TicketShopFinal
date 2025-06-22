@@ -59,9 +59,9 @@ public class StartGUI extends JFrame {
                 dispose();
                 new AlleBestellungenGUI();
 
-            } //else if (e.getSource() == btn_loeschen) {
-
-            //}
+            } else if (e.getSource() == btn_loeschen) {
+                
+            }
 
         }
 
