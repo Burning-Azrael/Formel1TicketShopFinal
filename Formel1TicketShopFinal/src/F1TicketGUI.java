@@ -78,7 +78,7 @@ public class F1TicketGUI extends JFrame {
         this.add(lbl_title, c);
 
         // Persönliche Daten
-        lbl_name = new JLabel("Name:");
+        lbl_name = new JLabel("Name: (*)");
         lbl_name.setFont(labelFont);
         c.gridx = 0;
         c.gridy = 1;
@@ -89,7 +89,7 @@ public class F1TicketGUI extends JFrame {
         c.gridx = 1;
         this.add(txt_name, c);
 
-        lbl_email = new JLabel("E-Mail:");
+        lbl_email = new JLabel("E-Mail: (*)");
         lbl_email.setFont(labelFont);
         c.gridx = 0;
         c.gridy = 2;
@@ -99,7 +99,7 @@ public class F1TicketGUI extends JFrame {
         c.gridx = 1;
         this.add(txt_email, c);
 
-        lbl_phone = new JLabel("Telefon:");
+        lbl_phone = new JLabel("Telefon: (*)");
         lbl_phone.setFont(labelFont);
         c.gridx = 0;
         c.gridy = 3;
@@ -220,8 +220,8 @@ public class F1TicketGUI extends JFrame {
         String sitzplatz = opt_vip.isSelected() ? "VIP"
                 : opt_tribuene.isSelected() ? "Tribüne" : opt_stehplatz.isSelected() ? "Stehplatz" : "Keine Auswahl";
 
-        if (sitzplatz.equals("Keine Auswahl")) {
-            JOptionPane.showMessageDialog(this, "Bitte wählen Sie eine Sitzplatzoption.");
+        if (sitzplatz.equals("Keine Auswahl") || name.isEmpty() || email.isEmpty() || strecke.isEmpty() || telefon.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Bitte Alle Felder Ausfüllen (*)");
             return;
         }
 
@@ -241,12 +241,21 @@ public class F1TicketGUI extends JFrame {
     private class MyActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == btn_speichern) {
+
+
+
                 String name = txt_name.getText();
                 String email = txt_email.getText();
-                String tel = txt_phone.getText();
+                //String tel = txt_phone.getText();
                 String race = cbo_race.getSelectedItem().toString();
                 String opt = "";
-                String zArt = "";
+                //String zArt = "";
+
+                if (name.isEmpty() || email.isEmpty() || race.isEmpty() ) {
+                    JOptionPane.showMessageDialog(null, "Bitte Alle Felder Ausfüllen (*)");
+                }else{
+
+                
 
                 if (opt_stehplatz.isSelected()) {
                     opt = opt_stehplatz.getText();
@@ -258,11 +267,12 @@ public class F1TicketGUI extends JFrame {
 
                 Integer anzahl = Integer.parseInt(cbo_quantity.getSelectedItem().toString());
 
+                /* 
                 if (opt_paypal.isSelected()) {
                     zArt = opt_paypal.getText();
                 } else if (opt_cash.isSelected()) {
                     zArt = opt_cash.getText();
-                }
+                }*/
 
                 BigDecimal preisProTicket = preise.get(race).get(opt);
                 BigDecimal gesamtpreis = preisProTicket.multiply(BigDecimal.valueOf(anzahl));
@@ -277,7 +287,7 @@ public class F1TicketGUI extends JFrame {
                 dao.speichernBestellung(bestellung);
                 dao.speichernKunde(kunde);
                 dao.speichernVeranstaltung(v);
-
+            }
             } else if (e.getSource() == btn_reset) {
                 txt_name.setText("");
                 txt_email.setText("");
