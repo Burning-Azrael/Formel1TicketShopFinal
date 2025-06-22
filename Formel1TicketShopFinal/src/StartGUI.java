@@ -1,9 +1,13 @@
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class StartGUI extends JFrame {
@@ -39,13 +43,13 @@ public class StartGUI extends JFrame {
         this.add(btn_anzeigen, c);
         btn_anzeigen.addActionListener(mylistener);
 
-        /*
-         * this.btn_loeschen = new JButton("Alte Bestellung löschen");
-         * c.gridx = 2;
-         * c.gridy = 0;
-         * this.add(btn_loeschen,c);
-         * btn_loeschen.addActionListener(mylistener);
-         */
+        
+         this.btn_loeschen = new JButton("Alte Bestellung löschen");
+         c.gridx = 2;
+         c.gridy = 0;
+         this.add(btn_loeschen,c);
+         btn_loeschen.addActionListener(mylistener);
+         
     }
 
     private class MyActionListener implements ActionListener {
@@ -60,11 +64,26 @@ public class StartGUI extends JFrame {
                 new AlleBestellungenGUI();
 
             } else if (e.getSource() == btn_loeschen) {
-                
+                delete();
             }
 
         }
+        public void delete(){
+            String x = JOptionPane.showInputDialog("Bitte geben sie Ihre Bestellungsnummer ein!");
+            String sql = "DELETE FROM bestellung WHERE bid = " + x;
+
+            try (Connection conn = Database_Connector.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.executeUpdate();
+                System.out.println("Bestellung erfolgreich gelöscht!");
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Die Bestellung konnte nicht gelöscht werden");
+            }
+        }
 
     }
+
 
 }

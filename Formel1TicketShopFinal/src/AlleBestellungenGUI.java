@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.MissingFormatArgumentException;
 
 
 public class AlleBestellungenGUI extends JFrame {
@@ -12,7 +13,7 @@ public class AlleBestellungenGUI extends JFrame {
     public AlleBestellungenGUI() {
         setTitle("Alle Bestellungen");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(500, 300);
+        setSize(675, 400);
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
@@ -28,7 +29,33 @@ public class AlleBestellungenGUI extends JFrame {
 
         // Listbox mit ScrollPane
         listModel = new DefaultListModel<>();
+
+        try {
+        listModel.addElement("" + String.format("%-6s %-16s %-15s %-20s %-15s", "BNr.: ", "Name: ", "Preis: ", "Veranstaltungsort: ", "E-Mail:"));
+        listModel.addElement(String.format("%-6s %-16s %-15s %-20s %-15s", "------", "----------------", "---------------", "--------------------", "---------------"));
+        } catch (MissingFormatArgumentException e) {
+            e.printStackTrace();
+            listModel.addElement("FEHLER IN FORMATZEILE!");
+        }
+
         bestellungsListe = new JList<>(listModel);
+        bestellungsListe.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
+        bestellungsListe.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list,
+                                                          Object value,
+                                                          int index,
+                                                          boolean isSelected,
+                                                          boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(
+                    list, value, index, isSelected, cellHasFocus);
+
+                label.setFont(new Font("Monospaced", index == 0 ? Font.BOLD : Font.PLAIN, 13));
+                return label;
+            }
+        });
+
         bestellungsListe.setVisibleRowCount(4);  // max. 4 sichtbare Zeilen
         JScrollPane scrollPane = new JScrollPane(bestellungsListe);
 
@@ -61,19 +88,25 @@ public class AlleBestellungenGUI extends JFrame {
     private void ladeBestellungen() {
         BestellungDAO dao = new BestellungDAO();
         List<Bestellung> bestellungen = dao.ladeAlleBestellungen();
+        List<Integer> keys = dao.ladeKeys();
     
         if (bestellungen.isEmpty()) {
             listModel.addElement("Keine Bestellungen gefunden.");
             return;
         }
+
+        Integer counter = 0;
     
         for (Bestellung b : bestellungen) {
-            String eintrag = "Name: " + b.getName() +
-                             ", Preis: " + b.getPreis() + " €"+ 
-                             ", Veranstaltungsort: " + b.getOrt() +
-                             ", E-Mail: " + b.getEmail();
-    
-            listModel.addElement(eintrag);
+            listModel.addElement(String.format(
+                "%-6s %-16s %-15s %-20s %-15s",
+                keys.get(counter),
+                b.getName(),
+                b.getPreis() + " €",
+                b.getOrt(),
+                b.getEmail()
+            ));
+            counter++;
         }
     }
     

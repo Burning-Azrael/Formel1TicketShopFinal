@@ -59,6 +59,25 @@ public class BestellungDAO {
         return liste;
     }
 
+    public List<Integer> ladeKeys(){
+
+        List<Integer> liste = new ArrayList<>();
+        String sql = "SELECT bid FROM bestellung";
+
+        try(Connection conn = Database_Connector.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()){
+                while (rs.next()) {
+                    Integer key = Integer.parseInt(rs.getString("bid"));
+                    liste.add(key);
+                    }
+                }catch(SQLException e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null,"Fehler beim Laden der Keys!");
+            }
+        return liste;
+    }
+
     public void speichernKunde(Kunde kunde){
         String sql = "INSERT INTO kunde (name,email) VALUES (?,?)";
 
@@ -68,7 +87,7 @@ public class BestellungDAO {
             stmt.setString(1, kunde.getName());
             stmt.setString(2, kunde.getEmail());
             stmt.executeUpdate();
-            System.out.println("Bestellung erfolgreich gespeichert!");
+            System.out.println("Kundendaten erfolgreich gespeichert!");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,7 +104,7 @@ public class BestellungDAO {
             stmt.setInt(2, v.getTicketanzahl());
             stmt.setString(3, v.getTicketoption());
             stmt.executeUpdate();
-            System.out.println("Bestellung erfolgreich gespeichert!");
+            System.out.println("Veranstaltungsdaten erfolgreich gespeichert!");
 
         } catch (SQLException e) {
             e.printStackTrace();

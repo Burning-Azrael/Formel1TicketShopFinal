@@ -4,7 +4,7 @@ public class Bestellung {
 
 
 
-
+    
     private String name;
     private BigDecimal preis;
     private String ort;

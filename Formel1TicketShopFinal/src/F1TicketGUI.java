@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +16,7 @@ public class F1TicketGUI extends JFrame {
     JRadioButton opt_paypal, opt_cash, opt_stehplatz, opt_tribuene, opt_vip;
     ButtonGroup paymentGroup;
     // JCheckBox chk_stehplatz, chk_tribuene, chk_vip;
-    JButton btn_reset, btn_save, btn_exit, btn_speichern;
+    JButton btn_reset, btn_back, btn_exit, btn_speichern;
 
     Map<String, Map<String, BigDecimal>> preise;
 
@@ -185,15 +183,15 @@ public class F1TicketGUI extends JFrame {
         c.insets = new Insets(10, 10, 10, 10);
         this.add(btn_reset, c);
 
-        btn_save = new JButton("Speichern in Datei");
-        c.gridx = 1;
-        c.gridy = 8;
-        c.insets = new Insets(10, 10, 10, 10);
-        this.add(btn_save, c);
-
-        btn_exit = new JButton("Beenden");
+        btn_back = new JButton("Zurück zum Hauptmenü");
         c.gridx = 0;
         c.gridy = 9;
+        c.insets = new Insets(10, 10, 10, 10);
+        this.add(btn_back, c);
+
+        btn_exit = new JButton("Beenden");
+        c.gridx = 1;
+        c.gridy = 8;
         c.insets = new Insets(10, 10, 10, 10);
         this.add(btn_exit, c);
 
@@ -206,37 +204,12 @@ public class F1TicketGUI extends JFrame {
         // Events
         btn_reset.addActionListener(myActionListener);
         btn_exit.addActionListener(myActionListener);
-        btn_save.addActionListener(this::saveToFile);
+        btn_back.addActionListener(myActionListener);
         btn_speichern.addActionListener(myActionListener);
 
     }
 
-    private void saveToFile(ActionEvent e) {
-        String name = txt_name.getText();
-        String email = txt_email.getText();
-        String telefon = txt_phone.getText();
-        String strecke = (String) cbo_race.getSelectedItem();
-        int anzahl = (Integer) cbo_quantity.getSelectedItem();
-        String sitzplatz = opt_vip.isSelected() ? "VIP"
-                : opt_tribuene.isSelected() ? "Tribüne" : opt_stehplatz.isSelected() ? "Stehplatz" : "Keine Auswahl";
-
-        if (sitzplatz.equals("Keine Auswahl") || name.isEmpty() || email.isEmpty() || strecke.isEmpty() || telefon.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Bitte Alle Felder Ausfüllen (*)");
-            return;
-        }
-
-        BigDecimal preisProTicket = preise.get(strecke).get(sitzplatz);
-        BigDecimal gesamtpreis = preisProTicket.multiply(BigDecimal.valueOf(anzahl));
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("F1_Bestellungen.txt", true))) {
-            writer.write(name + ";" + email + ";" + telefon + ";" + strecke + ";" + sitzplatz + ";" + anzahl + ";"
-                    + gesamtpreis + "€");
-            writer.newLine();
-            JOptionPane.showMessageDialog(this, "Bestellung gespeichert.\nGesamtpreis: " + gesamtpreis + "€");
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Fehler beim Speichern!");
-        }
-    }
+    
 
     private class MyActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -288,7 +261,7 @@ public class F1TicketGUI extends JFrame {
                 dao.speichernKunde(kunde);
                 dao.speichernVeranstaltung(v);
 
-                JOptionPane.showMessageDialog(null, "Bestellung erfolgreich gespeichert!");
+                JOptionPane.showMessageDialog(null, "Bestellung erfolgreich gespeichert! Ihre Bestellnummer lautet " + dao.ladeKeys().get(dao.ladeKeys().size() - 1));
             }
             } else if (e.getSource() == btn_reset) {
                 txt_name.setText("");
@@ -307,6 +280,8 @@ public class F1TicketGUI extends JFrame {
                 opt_paypal.setSelected(false);
 
             }else if (e.getSource()== btn_exit){
+                dispose();
+            }else if (e.getSource() == btn_back) {
                 dispose();
                 new StartGUI();
             }
